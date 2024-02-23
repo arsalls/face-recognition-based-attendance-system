@@ -164,3 +164,7 @@ flask_session/
 
 .idea
 flask_session
+
+faces
+faces/
+

@@ -1,11 +1,16 @@
-from flask import render_template, make_response, session, redirect, url_for
+from flask import render_template, make_response, session, redirect, url_for, request
+from models.Participants import Participants
 from utilities.helpers import login_required
 
 
 @login_required
 def index():
     try:
-        return render_template('index.html')
+        user_id = request.cookies.get('user')
+        participants = Participants.get_participants(user_id=user_id)
+        if isinstance(participants, Exception): raise participants
+
+        return render_template('index.html', participants=participants)
     except Exception as e:
         return str(e)
 

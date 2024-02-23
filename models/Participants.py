@@ -32,20 +32,21 @@ class Participants:
 
 
   @classmethod
-  def get_participants(cls, id=None, name=None, group=None):
+  def get_participants(cls, id=None, name=None, group=None, user_id=None):
     try:
       connection, cursor = get_db_connection()
 
       conditions = []
-      if id: conditions.append(f'`id` = {id}')
-      if name: conditions.append(f'`name` LIKE "%{name}%"')
-      if name: conditions.append(f'`group` = "{group}"')
+      if id: conditions.append(f"`id` = '{id}'")
+      if name: conditions.append(f"`name` LIKE'%{name}%'")
+      if name: conditions.append(f"`group` = '{group}'")
+      if name: conditions.append(f"`user_id` = '{user_id}'")
 
       where_clause = f" WHERE {' AND '.join(conditions)}" if len(conditions) > 0 else ""
 
       cursor.execute(f"""SELECT * FROM `participants`{where_clause};""")
       rows = cursor.fetchall()
-      return rows[0] if id or name else rows
+      return (rows[0] if len(rows)>0 else None) if id or name else rows
     except Exception as error:
       return error
     

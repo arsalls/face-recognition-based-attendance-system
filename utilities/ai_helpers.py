@@ -45,7 +45,7 @@ def add_face(id):
                     face_img_paths.append(path)
                     i += 1
                 j += 1
-            if j == os.getenv("NIMGS") * 5: break
+            if j == int(os.getenv("NIMGS")) * 5: break
             cv2.imshow('Adding new User', frame)
             if cv2.waitKey(1) == 27: break
         cap.release()
@@ -60,7 +60,7 @@ def take_attendance():
     try:
         identified_participant_id = None
         cap = cv2.VideoCapture(0)
-        ret, frame = cap.read()
+        _, frame = cap.read()
         if len(extract_face(frame)) > 0:
             (x, y, w, h) = extract_face(frame)[0]
             cv2.rectangle(frame, (x, y), (x+w, y+h), (86, 32, 251), 1)
