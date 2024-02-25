@@ -2,11 +2,11 @@ import os
 from flask import Flask
 from dotenv import load_dotenv
 from flask_session import Session
+load_dotenv()
 
 from routes_bp import routes_bp
 from utilities.errors import errors
 
-load_dotenv()
 app = Flask(__name__)
 
 
