@@ -25,4 +25,4 @@ routes_bp.route("/del-participants", methods=['POST'])(del_participant)
 
 # attendances routes
 routes_bp.route("/mark-attendance", methods=['POST'])(mark_attendance)
-routes_bp.route("/get_attendances", methods=['GET'])(get_attendances)
+routes_bp.route("/get_attendances", methods=['POST'])(get_attendances)

@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from flask import request
 
@@ -18,11 +18,21 @@ def get_attendances():
             end_datetime = _json.get('endDateTime')
             participant_id = _json.get('participant')
 
-            attendances = Attendances.get_attendances(user_id=user_id, participant_id=participant_id,
-                                                         start_datetime=start_datetime, end_datetime=end_datetime)
-            if isinstance(attendances, Exception): raise attendances
+            # '09/19/22'
 
-            return success(data=attendances)
+            if start_datetime and end_datetime:
+                if len(start_datetime) > 0 and len(end_datetime) > 0:
+                    start_datetime = datetime.datetime.strptime(start_datetime, '%m/%d/%y')
+                    end_datetime = datetime.datetime.strptime(end_datetime, '%m/%d/%y')
+                    end_datetime = end_datetime + datetime.timedelta(days=1)
+
+                    attendances = Attendances.get_attendances(user_id=user_id, participant_id=participant_id,
+                                                                 start_datetime=start_datetime, end_datetime=end_datetime)
+                    if isinstance(attendances, Exception): raise attendances
+
+                    return success(data=attendances)
+            return success(data=[])
+        return success(data=[])
     except Exception as e:
         return unhandled(e)
 
@@ -44,7 +54,7 @@ def mark_attendance():
             response = Attendances.mark_attendance(user_id=user_id, participant_id=participant_id)
             if isinstance(response, Exception): raise response
 
-            return success(data={"message":f"Attendance marked for Participant: {participant.get('name')} Duration: {datetime.now().strftime('%m/%d/%Y, %H:%M:%S')}"})
+            return success(data={"message":f"Attendance marked for Participant: {participant.get('name')} Duration: {datetime.datetime.now().strftime('%m/%d/%Y, %H:%M:%S')}"})
         else:
             return fail(data={"message":"Face not detected. Please make camera adjustments or make sure Participant is registered !"}, status_code=200)
     except Exception as e:
