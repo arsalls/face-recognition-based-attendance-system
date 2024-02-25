@@ -123,6 +123,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+.env
 .venv
 env/
 venv/
@@ -167,4 +168,6 @@ flask_session
 
 faces
 faces/
+
+face_recognition_model.pkl
 
