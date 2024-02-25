@@ -53,6 +53,23 @@ class Participants:
 
 
   @classmethod
+  def update_participant(cls, id=None, name=None, group=None):
+    try:
+      connection, cursor = get_db_connection()
+
+      updates = []
+      if name: updates.append(f"`name` = '{name}'")
+      if name: updates.append(f"`group` = '{group}'")
+
+      update_clause = f" {' , '.join(updates)}"
+      cursor.execute(f"""UPDATE `participants` set {update_clause} WHERE `id`='{id}';""")
+      connection.commit()
+      return True
+    except Exception as error:
+      return error
+
+
+  @classmethod
   def remove_participant(cls, id=None, user_id=None):
     try:
       connection, cursor = get_db_connection()

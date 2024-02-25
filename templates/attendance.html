@@ -110,7 +110,9 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{ url_for('static', filename='js/participants.js') }}"></script>
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="{{ url_for('static', filename='js/attendances.js') }}"></script>
 
     <title>Face Recognition Based Attendance System</title>
 </head>
@@ -125,49 +127,58 @@
 <div class="row text-center" style="padding: 20px;margin: 20px;">
 
     <div class="col"
-         style="border-radius: 20px;padding: 0px;background-color:rgb(211,211,211,0.5);margin:0px 10px 10px 10px;min-height: 400px;">
+         style="border-radius: 20px;padding: 0px;background-color:rgb(211,211,211,0.5);margin:0px 10px 10px 10px;min-height: 700px;">
         <h2 style="border-radius: 20px 20px 0px 0px;background-color: #0b4c61;color: white;padding: 10px;">
-            Participants <i class="material-icons">assignment</i></h2>
-        <a style="text-decoration: none;max-width: 300px; margin-right: 20px" href="/attendance">
-            <button style="font-size: 24px;font-weight: bold;border-radius: 10px;width:300px;padding: 10px;margin-top: 30px;margin-bottom: 30px;"
-                    class='btn btn-primary' data-bs-toggle="modal" data-bs-target="#participant-modal">
-                    Attendances <i class="material-icons">assignment</i></button>
-        </a>
-        <a style="text-decoration: none;max-width: 300px; margin-right: 20px">
-            <button style="font-size: 24px;font-weight: bold;border-radius: 10px;width:300px;padding: 10px;margin-top: 30px;margin-bottom: 30px;"
-                    class='btn btn-primary' id="add-participant" data-bs-toggle="modal" data-bs-target="#participant-modal">
-                Add Participant
-                <i class="material-icons">control_point_duplicate</i></button>
-        </a>
-        <a style="text-decoration: none;max-width: 300px;">
-            <button style="font-size: 24px;font-weight: bold;border-radius: 10px;width:300px;padding: 10px;margin-top: 30px;margin-bottom: 30px;"
-                    class='btn btn-primary' id="take-attendance">
-                Take Attendance
-                <i class="material-icons">beenhere</i></button>
-        </a>
+            Attendances <i class="material-icons">assignment</i></h2>
+        <div>
+            <a href="/" style="text-decoration: none;max-width: 300px; margin-right: 20px">
+                <button style="font-size: 24px;font-weight: bold;border-radius: 10px;width:490px;padding: 10px;margin-top: 30px;margin-bottom: 30px;"
+                        class='btn btn-primary'>
+                    Participant
+                </button>
+
+            </a>
+            <a style="text-decoration: none;max-width: 300px;">
+                <button style="font-size: 24px;font-weight: bold;border-radius: 10px;width:490px;padding: 10px;margin-top: 30px;margin-bottom: 30px;"
+                        class='btn btn-primary' id="take-attendance">
+                    Take Attendance
+                    <i class="material-icons">beenhere</i></button>
+            </a>
+        </div>
+
+        <div style="max-width: 1000px; display: flex; align-items: center; margin-left: 111px;margin-bottom: 38px;margin-top: 25px;">
+            <label for="fromDate"
+                   style="font-size: 18px; font-weight: bold; margin-right: 10px;color: #f3f3f3">From:</label>
+            <input type="date" id="fromDate"
+                   style="font-size: 16px; padding: 10px; margin-right: 20px; border: 2px solid #ccc; border-radius: 13px; background-color: #f9f9f9;">
+            <label for="toDate"
+                   style="font-size: 18px; font-weight: bold; margin-right: 10px;color: #f3f3f3">To:</label>
+            <input type="date" id="toDate"
+                   style="font-size: 16px; padding: 10px; margin-right: 20px; border: 2px solid #ccc; border-radius: 13px; background-color: #f9f9f9;">
+            <button id="submitReportBtn" class="btn btn-primary"
+                    style="font-size: 18px; font-weight: bold; border-radius: 10px; padding: 10px;">Apply
+            </button>
+            <a id="generateReportBtn" style="text-decoration: none;">
+                <button class="btn btn-primary ms-2"
+                        style="font-size: 18px; font-weight: bold; border-radius: 10px; padding: 10px;"> Generate Report
+                </button>
+            </a>
+        </div>
+
         <table class="table table-hover" style="width: 80%;color: snow;margin-bottom: 40px;">
             <thead class="thead-dark">
             <tr>
-                <td style=""><b>S. No.</b></td>
+               <td style=""><b>S. No.</b></td>
                 <td><b>Name</b></td>
                 <td><b>Group</b></td>
-                <td><b>Action</b></td>
+                <td><b>Date</b></td>
+                <td><b>Time</b></td>
             </tr>
             </thead>
+             <tbody id="attendances-tbody">
+             </tbody>
 
-            {% for participant in participants %}
-                <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ participant['name'] }}</td>
-                    <td>{{ participant['group'] }}</td>
-                    <td>
-                        <span class="badge bg-warning text-dark del-participant" style="padding: 5px;font-size: 10px;cursor: pointer;"
-                              data-id="{{ participant['id'] }}">Delete</span>
-                        <span class="badge bg-light text-dark update-participant" style="padding: 5px;font-size: 10px;cursor: pointer;"
-                              data-id="{{ participant['id'] }}">Update</span>
-                    </td>
-                </tr>
-            {% endfor %}
+
         </table>
 
     </div>

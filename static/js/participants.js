@@ -37,7 +37,10 @@ $(document).on("click", "#take-attendance", function () {
     });
 })
 
-$(document).on("click", "#add-participant", function () { $("#submit-participant").attr('data-action', 'add') })
+$(document).on("click", "#add-participant", function () {
+    $("#submit-participant").attr('data-action', 'add')
+    $("#id").prop('disabled', false);
+})
 
 $(document).on("click", "#submit-participant", function () {
     action = $("#submit-participant").attr('data-action')
@@ -46,17 +49,22 @@ $(document).on("click", "#submit-participant", function () {
     formdata['name'] = $("#name").val()
     formdata['group'] = $("#group").val()
     formdata['group'] = $("#group").val()
+    formdata['action'] = action
 
     if (formdata['group']?.trim() != "" && formdata['id']?.trim() != "" && formdata['name']?.trim() != "") {
-        $('#imaging').modal('show');
+        if (action == "add") { $('#imaging').modal('show'); }
+        else { $("#loading").addClass('load'); }
+
         $("imaging-label").html("Scanning Participant")
         $.ajax({
-            url: `/participants`,
+            url: `/action-participant`,
             type: "POST",
             data: JSON.stringify(formdata),
             contentType: "application/json; charset=UTF-8",
             success: function (response) {
-                $('#imaging').modal('hide');
+                if (action == "add") { $('#imaging').modal('hide'); }
+                else { $("#loading").removeClass('load'); }
+
                 if (response.message.indexOf('success') == -1) {
                     Swal.fire({
                         icon: 'error',
@@ -104,13 +112,14 @@ $(document).on("click", ".del-participant", function () {
         });
 })
 
-$(document).on("click", "#update-participant", function () {
+$(document).on("click", ".update-participant", function () {
     participant_id = $(this).attr("data-id");
 
     $("#loading").addClass('load');
     $.ajax({
-        url: `/get-participants?participant${participant_id}`,
+        url: `/get-participants?participant=${participant_id}`,
         type: "GET",
+        contentType: "application/json; charset=UTF-8",
         success: function (response) {
             $('#loading').removeClass('load');
             if (response.message.indexOf('success') == -1) {
@@ -121,12 +130,11 @@ $(document).on("click", "#update-participant", function () {
             } else {
                 participant = response.data
                 if (participant) {
-                    participant = JSON.parse(participant)
-
                     $("#id").val(participant["id"])
                     $("#name").val(participant["name"])
                     $("#group").val(participant["group"])
 
+                    $("#id").prop('disabled', true);
                     $("#participant-modal").modal('show');
                     $("#submit-participant").attr('data-action', 'update')
                 }

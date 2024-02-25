@@ -1,6 +1,8 @@
+import csv
 import datetime
+from io import StringIO
 
-from flask import request
+from flask import request, send_file, make_response
 
 from models.Attendances import Attendances
 from models.Participants import Participants
@@ -38,6 +40,49 @@ def get_attendances():
                     return success(data=attendances)
             return success(data=[])
         return success(data=[])
+    except Exception as e:
+        return unhandled(e)
+
+
+def generate_attendance():
+    try:
+        _json = request.args
+        user_id = request.cookies.get('user')
+        if _json and user_id:
+            start_datetime = _json.get('startDateTime')
+            end_datetime = _json.get('endDateTime')
+
+            # '09/19/22'
+
+            if start_datetime and end_datetime:
+                if len(start_datetime) > 0 and len(end_datetime) > 0:
+                    start_datetime = datetime.datetime.strptime(start_datetime, '%m/%d/%y')
+                    end_datetime = datetime.datetime.strptime(end_datetime, '%m/%d/%y')
+                    end_datetime = end_datetime + datetime.timedelta(days=1)
+
+                    attendances = Attendances.get_attendances(user_id=user_id,
+                                                                 start_datetime=start_datetime, end_datetime=end_datetime)
+                    attendances = [{
+                                    "Name": attendance.get("name"),
+                                    "Group": attendance.get("group"),
+                                    "Date": attendance.get("mark_datetime").strftime('%m/%d/%Y'),
+                                    "Time": attendance.get("mark_datetime").strftime('%H:%M:%S')
+                                    } for attendance in attendances]
+                    if isinstance(attendances, Exception): raise attendances
+
+                    csv_file = StringIO()
+                    csv_writer = csv.DictWriter(csv_file, fieldnames=["Name", "Group", "Date", "Time"])
+                    csv_writer.writeheader()
+
+                    for row in attendances: csv_writer.writerow(row)
+                    csv_file.seek(0)
+
+                    response = make_response(csv_file)
+                    response.headers['Content-Disposition'] = 'attachment; filename=attendance-report.csv'
+                    response.mimetype = 'text/csv'
+
+                    return response
+
     except Exception as e:
         return unhandled(e)
 

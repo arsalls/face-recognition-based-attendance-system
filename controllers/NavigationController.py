@@ -14,6 +14,13 @@ def index():
     except Exception as e:
         return str(e)
 
+@login_required
+def attendance():
+    try:
+        return render_template('attendance.html')
+    except Exception as e:
+        return str(e)
+
 
 def sign_in():
     try:
