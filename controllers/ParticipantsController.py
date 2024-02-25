@@ -1,11 +1,13 @@
 import os
+import threading
+
 from datetime import datetime
 
 from flask import request
 
 from models.Attendances import Attendances
 from models.Participants import Participants
-from utilities.ai_helpers import add_face, take_attendance
+from utilities.ai_helpers import add_face, take_attendance, train_model
 from utilities.errors import unhandled, invalid
 from utilities.helpers import success, fail, remove_folder_and_files
 
@@ -47,6 +49,8 @@ def del_participant():
 
             response = remove_folder_and_files(os.path.join(os.getenv("FACES_DIR"), participent_id))
             if isinstance(response, Exception): raise response
+
+            threading.Thread(target=train_model, name="AI Modal Trainer").start()
 
             return success(data={"message":"Participant removed successfully....."})
         else:
