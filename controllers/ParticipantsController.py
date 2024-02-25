@@ -34,3 +34,26 @@ def add_participant():
         return unhandled("invalid request")
     except Exception as e:
         return unhandled(e)
+
+#
+# def del_participant():
+#     try:
+#         _args = request.args
+#         participent_id = _args.get('participant')
+#         if user_id:
+#             response = Participants.remove_participant(id=id, name=name, group=group, user_id=user_id)
+#             if isinstance(response, Exception): raise response
+#
+#             if participant_id:
+#                 face_img_paths = add_face(id=participant_id)
+#                 if isinstance(face_img_paths, Exception): raise face_img_paths
+#
+#                 response = Participants.update_participant_face(id=participant_id, face_data=face_img_paths)
+#                 if isinstance(response, Exception): raise response
+#
+#                 return success(data={"message":"Participant successfully added....."})
+#             else:
+#                 return fail(data={"message":"user not added"}, status_code=200)
+#         return unhandled("invalid request")
+#     except Exception as e:
+#         return unhandled(e)

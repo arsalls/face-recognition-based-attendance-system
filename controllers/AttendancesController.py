@@ -44,7 +44,7 @@ def mark_attendance():
             response = Attendances.mark_attendance(user_id=user_id, participant_id=participant_id)
             if isinstance(response, Exception): raise response
 
-            return success(data=f"Attendance marked for Participant: {participant.get('name')}  at {datetime.now.strftime('%m/%d/%Y, %H:%M:%S')}")
+            return success(data={"message":f"Attendance marked for Participant: {participant.get('name')} Duration: {datetime.now().strftime('%m/%d/%Y, %H:%M:%S')}"})
         else:
             return fail(data={"message":"Face not detected. Please make camera adjustments or make sure Participant is registered !"}, status_code=200)
     except Exception as e:

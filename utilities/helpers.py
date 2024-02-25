@@ -104,3 +104,17 @@ def login_required(f):
     return f(*args, **kwargs)
 
   return decorated_function
+
+def remove_folder_and_files(folder_path):
+  try:
+    for file_name in os.listdir(folder_path):
+      file_path = os.path.join(folder_path, file_name)
+      if os.path.isfile(file_path):
+        os.unlink(file_path)
+      elif os.path.isdir(file_path):
+        remove_folder_and_files(file_path)
+
+      os.rmdir(folder_path)
+      print(f"Folder {folder_path} removed successfully.")
+  except Exception as e:
+    return e

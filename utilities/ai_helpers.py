@@ -18,7 +18,7 @@ def extract_face(img):
 
 def identify_face(facearray):
   try:
-      model = joblib.load('static/face_recognition_model.pkl')
+      model = joblib.load(os.getenv('MODAL_PATH'))
       return model.predict(facearray)
   except Exception as error:
     return error
