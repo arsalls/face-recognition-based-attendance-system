@@ -21,6 +21,7 @@ routes_bp.route("/login", methods=['POST'])(login)
 # participants routes
 routes_bp.route("/add-participants", methods=['POST'])(add_participant)
 routes_bp.route("/del-participants", methods=['POST'])(del_participant)
+routes_bp.route("/get-participants", methods=['GET'])(get_participants)
 
 
 # attendances routes

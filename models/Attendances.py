@@ -32,7 +32,7 @@ class Attendances:
         conditions.append(f"`mark_datetime` <= '{end_datetime}'")
 
       where_clause = f" WHERE {' AND '.join(conditions)}" if len(conditions) > 0 else ""
-      query = f"""SELECT * FROM `attendance`{where_clause};"""
+      query = f"""SELECT att.*, part.* FROM `attendance` att join `participants` part {where_clause};"""
       cursor.execute(query)
       rows = cursor.fetchall()
       return rows

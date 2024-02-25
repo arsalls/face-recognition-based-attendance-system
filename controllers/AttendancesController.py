@@ -27,6 +27,12 @@ def get_attendances():
 
                     attendances = Attendances.get_attendances(user_id=user_id,
                                                                  start_datetime=start_datetime, end_datetime=end_datetime)
+                    attendances = [{
+                                    "name": attendance.get("name"),
+                                    "group": attendance.get("group"),
+                                    "mark_date": attendance.get("mark_datetime").strftime('%m/%d/%Y'),
+                                    "mark_time": attendance.get("mark_datetime").strftime('%H:%M:%S')
+                                    } for attendance in attendances]
                     if isinstance(attendances, Exception): raise attendances
 
                     return success(data=attendances)

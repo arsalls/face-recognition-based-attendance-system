@@ -42,6 +42,7 @@ $(document).on("click", "#submit-participant", function () {
     formdata['id'] = $("#id").val()
     formdata['name'] = $("#name").val()
     formdata['group'] = $("#group").val()
+    formdata['group'] = $("#group").val()
 
     if (formdata['group']?.trim() != "" && formdata['id']?.trim() != "" && formdata['name']?.trim() != "") {
         $('#imaging').modal('show');
@@ -76,14 +77,13 @@ $(document).on("click", "#submit-participant", function () {
 
 $(document).on("click", ".del-participant", function () {
     participant_id = $(this).attr("data-id")
-    $('#loading').modal('show');
-
+    $("#loading").addClass('load');
     $.ajax({
             url: `/del-participants?participant=${participant_id}`,
             type: "POST",
             contentType: "application/json; charset=UTF-8",
             success: function (response) {
-                $('#loading').modal('hide');
+                $('#loading').removeClass('load');
                 if (response.message.indexOf('success') == -1) {
                     Swal.fire({
                         icon: 'error',
@@ -104,12 +104,12 @@ $(document).on("click", ".del-participant", function () {
 $(document).on("click", "#update-participant", function () {
     participant_id = $(this).attr("data-id");
 
-    $('#loading').modal('show');
+    $("#loading").addClass('load');
     $.ajax({
-        url: `/get-participant?participant${participant_id}`,
+        url: `/get-participants?participant${participant_id}`,
         type: "GET",
         success: function (response) {
-            $('#loading').modal('hide');
+            $('#loading').removeClass('load');
             if (response.message.indexOf('success') == -1) {
                 Swal.fire({
                     icon: 'error',
@@ -117,7 +117,21 @@ $(document).on("click", "#update-participant", function () {
                 })
             } else {
                 participant = response.data
-                JSON.parse(participant)
+                if (participant) {
+                    participant = JSON.parse(participant)
+
+                    $("#id").val(participant["id"])
+                    $("#name").val(participant["name"])
+                    $("#group").val(participant["group"])
+
+                    $("#participant-modal").modal('show');
+                }
+                else{
+                    Swal.fire({
+                        icon: 'warning',
+                        text: "No Participant Found"
+                    })
+                }
             }
         }
     });

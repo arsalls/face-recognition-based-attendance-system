@@ -57,3 +57,15 @@ def del_participant():
             return fail(data={"message":"Participant not added"}, status_code=200)
     except Exception as e:
         return unhandled(e)
+
+
+def get_participants():
+    try:
+        _args = request.args
+        participent_id = _args.get('participant')
+        response = Participants.get_participants(id=participent_id)
+        if isinstance(response, Exception): raise response
+
+        return success(data=response)
+    except Exception as e:
+        return unhandled(e)
