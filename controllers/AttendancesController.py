@@ -16,7 +16,6 @@ def get_attendances():
         if _json and user_id:
             start_datetime = _json.get('startDateTime')
             end_datetime = _json.get('endDateTime')
-            participant_id = _json.get('participant')
 
             # '09/19/22'
 
@@ -26,7 +25,7 @@ def get_attendances():
                     end_datetime = datetime.datetime.strptime(end_datetime, '%m/%d/%y')
                     end_datetime = end_datetime + datetime.timedelta(days=1)
 
-                    attendances = Attendances.get_attendances(user_id=user_id, participant_id=participant_id,
+                    attendances = Attendances.get_attendances(user_id=user_id,
                                                                  start_datetime=start_datetime, end_datetime=end_datetime)
                     if isinstance(attendances, Exception): raise attendances
 

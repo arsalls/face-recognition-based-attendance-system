@@ -101,4 +101,26 @@ $(document).on("click", ".del-participant", function () {
         });
 })
 
+$(document).on("click", "#update-participant", function () {
+    participant_id = $(this).attr("data-id");
+
+    $('#loading').modal('show');
+    $.ajax({
+        url: `/get-participant?participant${participant_id}`,
+        type: "GET",
+        success: function (response) {
+            $('#loading').modal('hide');
+            if (response.message.indexOf('success') == -1) {
+                Swal.fire({
+                    icon: 'error',
+                    text: response.data.message
+                })
+            } else {
+                participant = response.data
+                JSON.parse(participant)
+            }
+        }
+    });
+})
+
 
