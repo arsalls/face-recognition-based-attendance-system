@@ -22,7 +22,7 @@ class Attendances:
 
       conditions = []
       if user_id:
-        conditions.append(f"`user_id` = '{user_id}'")
+        conditions.append(f"att.`user_id` = '{user_id}'")
       if participant_id:
         if len(participant_id) > 0:
           conditions.append(f"`participant_id` = '{participant_id}'")

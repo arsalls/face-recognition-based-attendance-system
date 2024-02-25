@@ -37,7 +37,10 @@ $(document).on("click", "#take-attendance", function () {
     });
 })
 
+$(document).on("click", "#add-participant", function () { $("#submit-participant").attr('data-action', 'add') })
+
 $(document).on("click", "#submit-participant", function () {
+    action = $("#submit-participant").attr('data-action')
     let formdata = {}
     formdata['id'] = $("#id").val()
     formdata['name'] = $("#name").val()
@@ -48,7 +51,7 @@ $(document).on("click", "#submit-participant", function () {
         $('#imaging').modal('show');
         $("imaging-label").html("Scanning Participant")
         $.ajax({
-            url: "/add-participants",
+            url: `/participants`,
             type: "POST",
             data: JSON.stringify(formdata),
             contentType: "application/json; charset=UTF-8",
@@ -125,6 +128,7 @@ $(document).on("click", "#update-participant", function () {
                     $("#group").val(participant["group"])
 
                     $("#participant-modal").modal('show');
+                    $("#submit-participant").attr('data-action', 'update')
                 }
                 else{
                     Swal.fire({
