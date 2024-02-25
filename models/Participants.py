@@ -18,6 +18,7 @@ class Participants:
     except Exception as error:
       return error
 
+
   @classmethod
   def update_participant_face(cls, id, face_data):
     try:
@@ -47,6 +48,24 @@ class Participants:
       cursor.execute(f"""SELECT * FROM `participants`{where_clause};""")
       rows = cursor.fetchall()
       return (rows[0] if len(rows)>0 else None) if id or name else rows
+    except Exception as error:
+      return error
+
+
+  @classmethod
+  def remove_participant(cls, id=None, user_id=None):
+    try:
+      connection, cursor = get_db_connection()
+
+      conditions = []
+      if id: conditions.append(f"`id` = '{id}'")
+      if user_id: conditions.append(f"`user_id` = '{user_id}'")
+
+      where_clause = f" WHERE {' AND '.join(conditions)}" if len(conditions) > 0 else ""
+
+      cursor.execute(f"""DELETE FROM `participants`{where_clause};""")
+      connection.commit()
+      return True
     except Exception as error:
       return error
     

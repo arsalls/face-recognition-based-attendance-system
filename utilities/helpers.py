@@ -114,7 +114,7 @@ def remove_folder_and_files(folder_path):
       elif os.path.isdir(file_path):
         remove_folder_and_files(file_path)
 
-      os.rmdir(folder_path)
-      print(f"Folder {folder_path} removed successfully.")
+    os.rmdir(folder_path)
+    return True
   except Exception as e:
     return e
