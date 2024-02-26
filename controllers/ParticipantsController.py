@@ -1,11 +1,7 @@
 import os
 import threading
-
-from datetime import datetime
-
 from flask import request
 
-from models.Attendances import Attendances
 from models.Participants import Participants
 from utilities.ai_helpers import add_face, take_attendance, train_model
 from utilities.errors import unhandled, invalid

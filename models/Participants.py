@@ -79,8 +79,15 @@ class Participants:
       if user_id: conditions.append(f"`user_id` = '{user_id}'")
 
       where_clause = f" WHERE {' AND '.join(conditions)}" if len(conditions) > 0 else ""
-
       cursor.execute(f"""DELETE FROM `participants`{where_clause};""")
+
+      conditions = []
+      if id: conditions.append(f"`participant_id` = '{id}'")
+      if user_id: conditions.append(f"`user_id` = '{user_id}'")
+
+      where_clause = f" WHERE {' AND '.join(conditions)}" if len(conditions) > 0 else ""
+      cursor.execute(f"""DELETE FROM `attendance`{where_clause};""")
+
       connection.commit()
       return True
     except Exception as error:
